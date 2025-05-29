@@ -4,6 +4,7 @@ import CartWidget from './CartWidget';
 const NavBar = () => {
   return (
     <nav style={{
+      width: "100%",
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',

@@ -13,7 +13,7 @@ const fakeFetchProducts = () => {
   });
 };
 
-const ItemListContainer = ({ mensaje }) => {
+const ItemListContainer = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,8 +34,7 @@ const ItemListContainer = ({ mensaje }) => {
 
   return (
     <div>
-      <h2>{mensaje}</h2>
-      <h3>{categoryId ? `Categoría: ${categoryId}` : 'Todos los productos'}</h3>
+      <h2>{categoryId ? `Categoría: ${categoryId}` : 'Todos los productos'}</h2>
       <ul>
         {products.map(p => (
           <li key={p.id}>

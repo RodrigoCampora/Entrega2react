@@ -1,44 +1,36 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import ItemListContainer from './components/ItemListContainer';
+import ItemDetailContainer from './components/ItemDetailContainer';
+import NotFound from './components/NotFound';
 
-const fakeFetchProductById = (id) => {
-  const products = [
-    { id: '1', name: 'Remera Roja', description: 'Remera de algodón color rojo', price: 1500 },
-    { id: '2', name: 'Pantalón Azul', description: 'Pantalón de jean azul', price: 3200 },
-    { id: '3', name: 'Zapatillas', description: 'Zapatillas deportivas negras', price: 5000 }
-  ];
+function AppContent() {
+  const location = useLocation();
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(products.find(p => p.id === id));
-    }, 500);
-  });
-};
-
-const ItemDetailContainer = () => {
-  const { productId } = useParams(); // 👈 acá usamos "productId"
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    fakeFetchProductById(productId).then((data) => {
-      setProduct(data);
-      setLoading(false);
-    });
-  }, [productId]);
-
-  if (loading) return <p>Cargando detalle del producto...</p>;
-  if (!product) return <p>Producto no encontrado</p>;
+  // Ocultamos NavBar solo en la ruta /404 (página no encontrada)
+  const hideNavBar = location.pathname === '/404';
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-      <h2>{product.name}</h2>
-      <p>{product.description}</p>
-      <p>Precio: ${product.price}</p>
-      {/* Aquí podrías agregar <ItemCount /> después */}
-    </div>
+    <>
+      {!hideNavBar && <NavBar />}
+      <Routes>
+        <Route path="/" element={<ItemListContainer mensaje="¡Bienvenido a MiTienda, tu tienda favorita!" />} />
+        <Route path="/category/:categoryId" element={<ItemListContainer mensaje="¡Bienvenido a MiTienda, tu tienda favorita!" />} />
+        <Route path="/product/:productId" element={<ItemDetailContainer />} />
+        <Route path="/404" element={<NotFound />} />
+        {/* Redirigimos cualquier ruta inválida a /404 */}
+        <Route path="*" element={<Navigate to="/404" />} />
+      </Routes>
+    </>
   );
-};
+}
 
-export default ItemDetailContainer;
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+export default App;
