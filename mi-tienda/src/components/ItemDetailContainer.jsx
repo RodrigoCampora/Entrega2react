@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ItemCount from './ItemCount';
 
 const fakeFetchProductById = (id) => {
   const products = [
@@ -16,7 +17,7 @@ const fakeFetchProductById = (id) => {
 };
 
 const ItemDetailContainer = () => {
-  const { productId } = useParams(); // 👈 acá usamos "productId"
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +29,10 @@ const ItemDetailContainer = () => {
     });
   }, [productId]);
 
+  const handleAdd = (cantidad) => {
+    alert(`Agregaste ${cantidad} unidad(es) al carrito`);
+  };
+
   if (loading) return <p>Cargando detalle del producto...</p>;
   if (!product) return <p>Producto no encontrado</p>;
 
@@ -36,7 +41,7 @@ const ItemDetailContainer = () => {
       <h2>{product.name}</h2>
       <p>{product.description}</p>
       <p>Precio: ${product.price}</p>
-      {/* Aquí podrías agregar <ItemCount /> después */}
+      <ItemCount stock={5} initial={1} onAdd={handleAdd} />
     </div>
   );
 };
